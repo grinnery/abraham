@@ -10,7 +10,7 @@ services:
     volumes:
       - lecrypt:/etc/letsencrypt
     environment:
-      - FQDN=${domain}
-      - EMAIL=${email}
+      - FQDN=${FQDN}
+      - EMAIL=${EMAIL}
 volumes:
   lecrypt:
