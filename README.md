@@ -9,7 +9,13 @@ Recommended: Mount certs volume to preserve across rebuilds.
 
 ```
 docker volume create --name lecrypt
-docker run -v lecrypt:/etc/letsencrypt -e "FQDN=example.com" -e "EMAIL=sam@example.com" -p 80:80 -p 443:443 --name abraham grin/abraham
+docker run \
+    -v lecrypt:/etc/letsencrypt \
+    -e "FQDN=example.com" \
+    -e "EMAIL=sam@example.com" \
+    -p 80:80 -p 443:443 \
+    --name abraham \
+    grin/abraham
 ```
 
 or use the provided [docker-compose.yml](docker-compose.yml) as an example.
