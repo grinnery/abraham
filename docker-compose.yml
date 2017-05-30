@@ -2,8 +2,7 @@ version: "3"
 
 services:
   abraham:
-    build:
-      context: .
+    image: grin/abraham
     ports:
       - "80:80"
       - "443:443"

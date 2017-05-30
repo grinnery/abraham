@@ -49,6 +49,6 @@ FQDN_IP=`dig +short ${FQDN}`
 
 Done: Set a domain for certbot from the active docker machine on Win:
 ```
-@FOR /f "tokens=*" %i IN ('docker-machine active -t 1') DO set domain=%i
+@FOR /f "tokens=*" %i IN ('docker-machine active -t 1') DO set FQDN=%i
 ```
 
