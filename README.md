@@ -1,38 +1,28 @@
 # nginx + certbot
 
-to set a domain for certbot, use `domain` environment variable, e.g. from nte active docker machine:
-```
-@FOR /f "tokens=*" %i IN ('docker-machine active -t 1') DO set domain=%i
-```
-
 Templated [nginx](https://hub.docker.com/_/nginx/) setup with automatic SSL by [certbot](https://certbot.eff.org/#debianjessie-nginx)
 
-Done: use gosu and exec as described here:
+## Usage
 
-https://docs.docker.com/engine/reference/builder/#/exec-form-entrypoint-example
-https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/
-
-Done: mount certs volume to preserve across rebuilds.
+Required: Define environment variables `FQDN` and `EMAIL` for certbot.
+Recommended: Mount certs volume to preserve across rebuilds.
 
 ```
-docker build -t abraham --build-arg domain=example.com .
 docker volume create --name lecrypt
-docker volume create --name lewww
-docker run -v lecrypt:/etc/letsencrypt -p 80:80 -p 443:443 --name abraham abraham
+docker run -v lecrypt:/etc/letsencrypt -e "FQDN=example.com" -e "EMAIL=sam@example.com" -p 80:80 -p 443:443 --name abraham grin/abraham
 ```
 
-- Check that FQDN is resolving to this host before attemptiong to certbot
-- 
-```
-EXT_IP=`dig +short myip.opendns.com @resolver1.opendns.com`
-FQDN_IP=`dig +short ${FQDN}`
-```
+or use the provided [docker-compose.yml](docker-compose.yml) as an example.
 
-- pluggable /locations for nginx
-- switch to S6 for handling multiple processes
+Nginx is configured to load pluggable locations from  [`/etc/nginx/locations-enabled`](container/root/etc/nginx/locations-enabled)
+
+
+## TODO:
+
+- switch to S6 for handling background certbot script
 
 - MAYBE: planB when certbot failed?
-    generate self-signed certificate like that
+    generate self-signed certificate like that:
 ```
     RUN mkdir -p $CERTPATH && \
     openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
@@ -42,3 +32,23 @@ FQDN_IP=`dig +short ${FQDN}`
 ```
 
 - Read: https://hub.docker.com/r/ceroic/certbot-generator/
+
+## Work notes
+
+Done: use gosu and exec as described here:
+
+https://docs.docker.com/engine/reference/builder/#/exec-form-entrypoint-example
+https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/
+
+Done: On startup, check is performed that FQDN is resolving to this host external IP before attemptiong to run certbot:
+```
+EXT_IP=`dig +short myip.opendns.com @resolver1.opendns.com`
+FQDN_IP=`dig +short ${FQDN}`
+```
+
+
+Done: Set a domain for certbot from the active docker machine on Win:
+```
+@FOR /f "tokens=*" %i IN ('docker-machine active -t 1') DO set domain=%i
+```
+
