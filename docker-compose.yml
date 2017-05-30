@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  abraham:
+    build:
+      context: .
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - lecrypt:/etc/letsencrypt
+    environment:
+      - FQDN=${domain}
+      - EMAIL=${email}
+volumes:
+  lecrypt:

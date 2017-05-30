@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Under Construction</title>
+	<style type="text/css">
+		html, body {
+		    background:#777;
+		    margin:0;
+		}
+		#canvas {
+		    position:fixed;
+		    background:#777;
+		}
+		h1 {
+			color:transparent;
+			opacity: 0.8;
+			text-shadow: 0 0 5px rgba(0,0,0,0.7);
+			font-size: 500%;
+			font-family: "Arial Black", sans-serif;
+			font-weight: bold;
+			z-index:1;
+			position:absolute;
+		    left: 0;
+		    line-height: 100px;
+		    margin-top: -50px;
+		    position: absolute;
+		    text-align: center;
+		    top: 50%;
+		    width: 100%;
+    	}
+	</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<h1>Under Construction</h1>
+
+
+<script>
+var canvas = document.getElementById('canvas'),
+    ctx = canvas.getContext('2d');
+
+// closer to analouge appearance
+canvas.width = 320
+canvas.height = 240;
+
+function resize() {
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+}
+resize();
+window.onresize = resize;
+
+function noise(ctx) {
+
+    var w = ctx.canvas.width,
+        h = ctx.canvas.height,
+        idata = ctx.createImageData(w, h),
+        buffer32 = new Uint32Array(idata.data.buffer),
+        len = buffer32.length,
+        i = 0;
+
+    for(; i < len;)
+        buffer32[i++] = ((255 * Math.random())|0) << 24;
+
+    ctx.putImageData(idata, 0, 0);
+}
+
+var toggle = true;
+
+// added toggle to get 30 FPS instead of 60 FPS
+(function loop() {
+    toggle = !toggle;
+    if (toggle) {
+        requestAnimationFrame(loop);
+        return;
+    }
+    noise(ctx);
+    requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
