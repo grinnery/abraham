@@ -1,5 +1,5 @@
 FROM nginx:stable
-MAINTAINER And Grin <a@grin.ly>
+LABEL maintainer "And Grin <a@grin.ly>"
 
 # update, install certbot and stuff, then clean up
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list &&\
